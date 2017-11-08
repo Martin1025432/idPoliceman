@@ -38,7 +38,7 @@ imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)#转成灰色图
 #cv2.imshow("[srcImg]",roiImag)  
 
 #二值化 ,找轮廓前必须先把图像二值化    
-ret, thresh = cv2.threshold(imgray, 150, 255, cv2.THRESH_BINARY)
+ret, thresh = cv2.threshold(imgray, 150, 250, cv2.THRESH_BINARY)
 #cv2.imshow("[sImg]",thresh)   
 #找轮廓必须有三个返回值，网上教程大部份出错
 thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)  
@@ -52,12 +52,18 @@ thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APP
 接下来的参数是轮廓的颜色和厚度。
 """
 #在彩色图片上画线，才有颜色
-#for i in range(10):
-#cv2.drawContours(roiImag,contours,10,(0,0,255),2)  
-
-cnt=contours[10]
-x,y,w,h=cv2.boundingRect(cnt)
+#cv2.drawContours(roiImag,contours,-1,(0,0,255),2)  
+#轮廓面积，即为车牌面积
+length=[cv2.contourArea(contours[i],True) for i in range(len(contours))] 
+a=length.index(max(length))
+cv2.drawContours(roiImag,contours,a,(0,0,255),2)  
+cv2.imshow("img", roiImag)
+#cnt=contours[1]
+#perimeter = cv2.arcLength(cnt,True)
+x,y,w,h=cv2.boundingRect(contours[a])
 img=cv2.rectangle(roiImag,(x,y),(x+w,y+h),(0,255,0),2)
 cv2.imshow("img", img)  
+#perimeter = cv2.arcLength(cnt,True)
+
 #cv2.imshow("[sImg]",thresh)   
 cv2.waitKey(0)
