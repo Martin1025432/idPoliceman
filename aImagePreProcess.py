@@ -23,13 +23,13 @@ import numpy as np
 import matplotlib.pyplot as plt 
 #以灰度读取图片
 #srcImg = cv2.imread("CZ180.jpg",0)
-srcImg = cv2.imread("CZ180.jpg")
-
+srcImg = cv2.imread("LX81.jpg")
+plt.imshow(srcImg, cmap="gray")
 #plt.imshow(srcImg, cmap="gray")
 
 #cv2.imshow 必须跟随 cv2.waitKey(0)
 #cv2.imshow("[srcImg]",srcImg)                  #[1]显示原始图片
-roiImag=srcImg[800:1200,0:800] 
+roiImag=srcImg[0:750,0:600] 
 imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)#转成灰色图
 #srcImg[0:200,0:300]=roiImag
 #plt.imshow(roiImag, cmap="gray")
@@ -54,15 +54,16 @@ thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APP
 #在彩色图片上画线，才有颜色
 #cv2.drawContours(roiImag,contours,-1,(0,0,255),2)  
 #轮廓面积，即为车牌面积
+#cv2.imshow("img", thresh)
 length=[cv2.contourArea(contours[i],True) for i in range(len(contours))] 
 a=length.index(max(length))
 cv2.drawContours(roiImag,contours,a,(0,0,255),2)  
-cv2.imshow("img", roiImag)
+#cv2.imshow("img1", roiImag)
 #cnt=contours[1]
 #perimeter = cv2.arcLength(cnt,True)
 x,y,w,h=cv2.boundingRect(contours[a])
 img=cv2.rectangle(roiImag,(x,y),(x+w,y+h),(0,255,0),2)
-cv2.imshow("img", img)  
+cv2.imshow("img2", img)  
 #perimeter = cv2.arcLength(cnt,True)
 
 #cv2.imshow("[sImg]",thresh)   
