@@ -30,7 +30,7 @@ srcImg = cv2.imread("CZ180.jpg")
 #cv2.imshow 必须跟随 cv2.waitKey(0)
 #cv2.imshow("[srcImg]",srcImg)                  #[1]显示原始图片
 roiImag=srcImg[800:1200,0:800] 
-imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)
+imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)#转成灰色图
 #srcImg[0:200,0:300]=roiImag
 #plt.imshow(roiImag, cmap="gray")
 #cv2.imshow("[srcImg]",srcImg)       
@@ -51,9 +51,13 @@ thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APP
 第三个参数是轮廓的索引（在绘制独立轮廓是很有用，当设置为-1时绘制所有轮廓）。
 接下来的参数是轮廓的颜色和厚度。
 """
-for i in range(10):
-    cv2.drawContours(roiImag,contours,i,(0,0,255),2)  
+#在彩色图片上画线，才有颜色
+#for i in range(10):
+#cv2.drawContours(roiImag,contours,10,(0,0,255),2)  
 
-cv2.imshow("img", roiImag)  
+cnt=contours[10]
+x,y,w,h=cv2.boundingRect(cnt)
+img=cv2.rectangle(roiImag,(x,y),(x+w,y+h),(0,255,0),2)
+cv2.imshow("img", img)  
 #cv2.imshow("[sImg]",thresh)   
 cv2.waitKey(0)
