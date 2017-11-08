@@ -1,1 +1,2 @@
 # idPoliceman
+本项目主要用于车牌识别，构想是用OPENCV获取车牌框，通过tensorflow深度学习
