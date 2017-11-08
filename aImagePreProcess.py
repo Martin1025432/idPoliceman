@@ -21,13 +21,39 @@ Created on Wed Nov  8 17:38:33 2017
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt 
- 
-srcImg = cv2.imread("test.bmp")
+#以灰度读取图片
+#srcImg = cv2.imread("CZ180.jpg",0)
+srcImg = cv2.imread("CZ180.jpg")
+
 #plt.imshow(srcImg, cmap="gray")
 
 #cv2.imshow 必须跟随 cv2.waitKey(0)
 #cv2.imshow("[srcImg]",srcImg)                  #[1]显示原始图片
-roiImag=srcImg[300:500,250:550] 
-srcImg[0:180,0:300]=roiImag
-plt.imshow(srcImg, cmap="gray")
+roiImag=srcImg[800:1200,0:800] 
+imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)
+#srcImg[0:200,0:300]=roiImag
+#plt.imshow(roiImag, cmap="gray")
+#cv2.imshow("[srcImg]",srcImg)       
 #cv2.waitKey(0)
+#cv2.imshow("[srcImg]",roiImag)  
+
+#二值化 ,找轮廓前必须先把图像二值化    
+ret, thresh = cv2.threshold(imgray, 150, 255, cv2.THRESH_BINARY)
+#cv2.imshow("[sImg]",thresh)   
+#找轮廓必须有三个返回值，网上教程大部份出错
+thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)  
+##plt.imshow(roiImag, cmap="gray")
+#函数cv2.drawContours()可以被用来绘制轮廓。它可以根据你提供的边界点绘制任何形状。
+"""
+绘制轮廓
+它的第一个参数是原始图像，
+第二个参数是轮廓，一个python列表，
+第三个参数是轮廓的索引（在绘制独立轮廓是很有用，当设置为-1时绘制所有轮廓）。
+接下来的参数是轮廓的颜色和厚度。
+"""
+for i in range(10):
+    cv2.drawContours(roiImag,contours,i,(0,0,255),2)  
+
+cv2.imshow("img", roiImag)  
+#cv2.imshow("[sImg]",thresh)   
+cv2.waitKey(0)
