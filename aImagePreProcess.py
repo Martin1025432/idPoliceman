@@ -29,8 +29,8 @@ plt.imshow(srcImg, cmap="gray")
 
 #cv2.imshow 必须跟随 cv2.waitKey(0)
 #cv2.imshow("[srcImg]",srcImg)                  #[1]显示原始图片
-roiImag=srcImg[0:750,0:600] 
-imgray = cv2.cvtColor(roiImag,cv2.COLOR_BGR2GRAY)#转成灰色图
+#roiImag=srcImg[800:1200,0:800] 
+imgray = cv2.cvtColor(srcImg,cv2.COLOR_BGR2GRAY)#转成灰色图
 #srcImg[0:200,0:300]=roiImag
 #plt.imshow(roiImag, cmap="gray")
 #cv2.imshow("[srcImg]",srcImg)       
@@ -55,15 +55,25 @@ thresh,contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APP
 #cv2.drawContours(roiImag,contours,-1,(0,0,255),2)  
 #轮廓面积，即为车牌面积
 #cv2.imshow("img", thresh)
-length=[cv2.contourArea(contours[i],True) for i in range(len(contours))] 
-a=length.index(max(length))
-cv2.drawContours(roiImag,contours,a,(0,0,255),2)  
+#length=[cv2.contourArea(contours[i],True) for i in range(len(contours))] 
+#a=length.index(max(length))
+#cv2.drawContours(srcImg,contours,a,(0,0,255),2)  
 #cv2.imshow("img1", roiImag)
 #cnt=contours[1]
 #perimeter = cv2.arcLength(cnt,True)
 x,y,w,h=cv2.boundingRect(contours[a])
-img=cv2.rectangle(roiImag,(x,y),(x+w,y+h),(0,255,0),2)
-cv2.imshow("img2", img)  
+img=cv2.rectangle(srcImg,(x,y),(x+w,y+h),(0,255,0),2)
+cv2.imshow("img2", thresh)  
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 7))
+closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+#腐蚀
+closed = cv2.erode(closed, None, iterations = 10)
+#膨胀
+closed = cv2.dilate(closed, None, iterations = 15)
+
+thresh2,contours, hierarchy = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+cv2.drawContours(srcImg,contours,-1,(0,0,255),2) 
+cv2.imshow("imgD2", srcImg)  
 #perimeter = cv2.arcLength(cnt,True)
 
 #cv2.imshow("[sImg]",thresh)   
